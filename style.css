@@ -418,3 +418,11 @@ h2 {
   }
 }
 
+/* Slightly brighten the whole game on small/mobile screens where things can look too dark */
+@media (max-width: 600px) {
+  #game-root {
+    filter: brightness(1.2) contrast(1.05);
+  }
+}
+
+

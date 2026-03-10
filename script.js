@@ -428,11 +428,12 @@
   }
 
   function getPlayerHitbox() {
-    const x = PLAYER_X + playerSize.w * 0.15;
-    const width = playerSize.w * 0.7;
-    const baseY = GROUND_Y + 4;
+    // Smaller, centered hitbox around Viktorie
+    const x = PLAYER_X + playerSize.w * 0.18;
+    const width = playerSize.w * 0.64;
+    const baseY = GROUND_Y + 5;
     const y = baseY + (state.playerY * 0.5 * WORLD_HEIGHT) / 100;
-    const height = playerSize.h * 0.8;
+    const height = playerSize.h * 0.75;
     return { x, y, width, height };
   }
 
@@ -446,11 +447,11 @@
       };
     }
     return {
-      x: o.x + o.width * 0.15,
-      // Higher and shorter hitbox = much more forgiving collision
-      y: GROUND_Y + 6,
-      width: o.width * 0.7,
-      height: o.height * 0.4,
+      x: o.x + o.width * 0.2,
+      // Higher and shorter hitbox = very forgiving collision
+      y: GROUND_Y + 7,
+      width: o.width * 0.6,
+      height: o.height * 0.32,
     };
   }
 
@@ -467,8 +468,15 @@
     const playerBox = getPlayerHitbox();
     for (let i = state.obstacles.length - 1; i >= 0; i--) {
       const o = state.obstacles[i];
-      // Small grace period right after spawn to avoid unfair instant hits
-      if (state.gameTime - o.bornAt < 350) continue;
+      // Generous grace period right after spawn to avoid unfair instant hits
+      if (state.gameTime - o.bornAt < 650) continue;
+
+      // Only consider obstacles that are roughly aligned horizontally with Viktorie
+      const centerX = o.x + o.width / 2;
+      const leftLimit = PLAYER_X - 6;
+      const rightLimit = PLAYER_X + playerSize.w + 6;
+      if (centerX < leftLimit || centerX > rightLimit) continue;
+
       const obBox = getObstacleHitbox(o);
       if (rectsOverlap(playerBox, obBox)) {
         if (o.type === "elixir") {
