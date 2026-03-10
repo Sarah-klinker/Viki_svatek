@@ -194,6 +194,7 @@
 
   function startGame() {
     // Even if some images failed to preload, still allow starting the game
+    if (state.running) return;
     resetState();
     requestAnimationFrame(gameLoop);
   }
@@ -601,17 +602,48 @@
     jump();
   }
 
-  startButton.addEventListener("click", () => {
-    startGame();
-  });
+  // Start button – support both click and touch for mobile browsers
+  if (startButton) {
+    startButton.addEventListener("click", () => {
+      startGame();
+    });
+    startButton.addEventListener(
+      "touchstart",
+      (e) => {
+        e.preventDefault();
+        startGame();
+      },
+      { passive: false }
+    );
+  }
 
-  retryButton.addEventListener("click", () => {
-    startGame();
-  });
+  if (retryButton) {
+    retryButton.addEventListener("click", () => {
+      startGame();
+    });
+    retryButton.addEventListener(
+      "touchstart",
+      (e) => {
+        e.preventDefault();
+        startGame();
+      },
+      { passive: false }
+    );
+  }
 
-  playAgainButton.addEventListener("click", () => {
-    startGame();
-  });
+  if (playAgainButton) {
+    playAgainButton.addEventListener("click", () => {
+      startGame();
+    });
+    playAgainButton.addEventListener(
+      "touchstart",
+      (e) => {
+        e.preventDefault();
+        startGame();
+      },
+      { passive: false }
+    );
+  }
 
   window.addEventListener("keydown", handleKeydown);
   gameRoot.addEventListener("mousedown", handlePointerDown);
