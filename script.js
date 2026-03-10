@@ -59,7 +59,7 @@
   const BASE_SPEED_HARD = 34;
 
   // During boost Viktorie feels faster: world scrolls quicker
-  const BOOST_SPEED_MULTIPLIER = 1.35;
+  const BOOST_SPEED_MULTIPLIER = 1.25;
 
   // Jump tuned slightly higher again + longer hang time
   const JUMP_STRENGTH = 82;
@@ -371,6 +371,7 @@
       y: 0,
       width: type === "elixir" ? elixirSize.w : obstacleSize.w,
       height: type === "elixir" ? elixirSize.h : obstacleSize.h,
+      bornAt: state.gameTime,
     };
   }
 
@@ -406,8 +407,8 @@
 
   function updateObstacles(dt, scrollSpeed) {
     // Move obstacles from right to left in percent of game width per second.
-    // Slightly faster than the background to feel dynamic but readable.
-    const obstacleSpeed = scrollSpeed * 1.4; // percent per second
+    // Slightly faster than the background to feel dynamic but still readable.
+    const obstacleSpeed = scrollSpeed * 1.3; // percent per second
     for (const o of state.obstacles) {
       o.x -= obstacleSpeed * dt;
       if (o.type === "elixir") {
@@ -427,11 +428,11 @@
   }
 
   function getPlayerHitbox() {
-    const x = PLAYER_X + playerSize.w * 0.1;
-    const width = playerSize.w * 0.8;
-    const baseY = GROUND_Y + 2;
+    const x = PLAYER_X + playerSize.w * 0.15;
+    const width = playerSize.w * 0.7;
+    const baseY = GROUND_Y + 4;
     const y = baseY + (state.playerY * 0.5 * WORLD_HEIGHT) / 100;
-    const height = playerSize.h * 0.9;
+    const height = playerSize.h * 0.8;
     return { x, y, width, height };
   }
 
@@ -445,11 +446,11 @@
       };
     }
     return {
-      x: o.x + o.width * 0.1,
-      // Above ground and shorter height = more forgiving collision
-      y: GROUND_Y + 3,
-      width: o.width * 0.8,
-      height: o.height * 0.55,
+      x: o.x + o.width * 0.15,
+      // Higher and shorter hitbox = much more forgiving collision
+      y: GROUND_Y + 6,
+      width: o.width * 0.7,
+      height: o.height * 0.4,
     };
   }
 
@@ -466,6 +467,8 @@
     const playerBox = getPlayerHitbox();
     for (let i = state.obstacles.length - 1; i >= 0; i--) {
       const o = state.obstacles[i];
+      // Small grace period right after spawn to avoid unfair instant hits
+      if (state.gameTime - o.bornAt < 350) continue;
       const obBox = getObstacleHitbox(o);
       if (rectsOverlap(playerBox, obBox)) {
         if (o.type === "elixir") {
