@@ -54,12 +54,14 @@ body {
   width: 200%;
   background-image: url("assets/background.jpg");
   background-repeat: repeat-x;
-  background-size: cover;
+  /* Fit the picture height; scrolls infinitely horizontally */
+  background-size: auto 100%;
   will-change: transform;
 }
 
 .bg-2 {
   left: 100%;
+  display: none; /* Single repeated background is enough for the loop */
 }
 
 #game-layer {
@@ -173,7 +175,8 @@ body {
 
 .obstacle {
   position: absolute;
-  width: 12%;
+  /* Slightly smaller obstacles for fairer jumps */
+  width: 9%;
   aspect-ratio: 1 / 1;
   background-size: contain;
   background-repeat: no-repeat;
@@ -183,7 +186,7 @@ body {
 }
 
 .obstacle.elixir {
-  width: 10%;
+  width: 7%;
   bottom: 26%;
   filter: drop-shadow(0 0 6px rgba(115, 255, 196, 0.9));
 }

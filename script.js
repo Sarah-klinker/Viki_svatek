@@ -35,34 +35,38 @@
 
   const playerSize = { w: 12, h: 24 };
   const chaserSize = { w: 12, h: 24 };
-  const obstacleSize = { w: 10, h: 18 };
-  const elixirSize = { w: 8, h: 12 };
+  // Slightly smaller logical obstacle size for collision
+  const obstacleSize = { w: 9, h: 14 };
+  const elixirSize = { w: 7, h: 10 };
 
   const RUN_ANIM_INTERVAL = 140;
-  const FLOATING_TEXT_MIN_INTERVAL = 3000;
-  const FLOATING_TEXT_MAX_INTERVAL = 7500;
+  const FLOATING_TEXT_MIN_INTERVAL = 3500;
+  const FLOATING_TEXT_MAX_INTERVAL = 9000;
   const BOOST_DURATION = 3000;
 
-  const MIN_SPAWN_INTERVAL_EASY = 1200;
-  const MIN_SPAWN_INTERVAL_MED = 900;
-  const MIN_SPAWN_INTERVAL_HARD = 650;
+  // Obstacle spawn pacing (ms) – tuned for a calmer arcade feel
+  const MIN_SPAWN_INTERVAL_EASY = 1600;
+  const MIN_SPAWN_INTERVAL_MED = 1300;
+  const MIN_SPAWN_INTERVAL_HARD = 1000;
 
-  const MAX_SPAWN_INTERVAL_EASY = 1700;
-  const MAX_SPAWN_INTERVAL_MED = 1350;
-  const MAX_SPAWN_INTERVAL_HARD = 1000;
+  const MAX_SPAWN_INTERVAL_EASY = 2300;
+  const MAX_SPAWN_INTERVAL_MED = 1850;
+  const MAX_SPAWN_INTERVAL_HARD = 1450;
 
-  const BASE_SPEED_EASY = 30;
-  const BASE_SPEED_MED = 36;
-  const BASE_SPEED_HARD = 42;
+  // Base "speed" used to derive scroll speed – lower = less chaotic
+  const BASE_SPEED_EASY = 22;
+  const BASE_SPEED_MED = 28;
+  const BASE_SPEED_HARD = 34;
 
-  const BOOST_SPEED_MULTIPLIER = 0.75;
+  // During boost Viktorie feels faster: world scrolls quicker
+  const BOOST_SPEED_MULTIPLIER = 1.35;
 
-  const JUMP_STRENGTH = 52;
-  const GRAVITY = -145;
+  // Jump tuned slightly higher again + longer hang time
+  const JUMP_STRENGTH = 82;
+  const GRAVITY = -112;
 
   const gameRoot = document.getElementById("game-root");
   const bg1 = document.querySelector(".bg-1");
-  const bg2 = document.querySelector(".bg-2");
   const gameLayer = document.getElementById("game-layer");
   const playerEl = document.getElementById("player");
   const chaserEl = document.getElementById("chaser");
@@ -189,7 +193,7 @@
   }
 
   function startGame() {
-    if (!imagesLoaded) return;
+    // Even if some images failed to preload, still allow starting the game
     resetState();
     requestAnimationFrame(gameLoop);
   }
@@ -262,10 +266,13 @@
         ? MAX_SPAWN_INTERVAL_MED
         : MAX_SPAWN_INTERVAL_HARD;
 
-    state.backgroundOffset -= (scrollSpeed * 0.35 * dt * 2) % 200;
-    const bgOffset = ((state.backgroundOffset % 200) + 200) % 200;
-    bg1.style.transform = `translate3d(${-bgOffset}%, 0, 0)`;
-    bg2.style.transform = `translate3d(${200 - bgOffset}%, 0, 0)`;
+    // Parallax background: gentle, continuous scroll
+    state.backgroundOffset =
+      (state.backgroundOffset + scrollSpeed * 0.5 * dt) % 100;
+    const bgPos = -state.backgroundOffset;
+    if (bg1) {
+      bg1.style.backgroundPosition = `${bgPos}% 0`;
+    }
 
     updateRunAnimation(dtMs);
     updatePlayerPhysics(dt);
@@ -397,9 +404,11 @@
   }
 
   function updateObstacles(dt, scrollSpeed) {
-    const speedWorld = (scrollSpeed / 60) * WORLD_WIDTH;
+    // Move obstacles from right to left in percent of game width per second.
+    // Slightly faster than the background to feel dynamic but readable.
+    const obstacleSpeed = scrollSpeed * 1.4; // percent per second
     for (const o of state.obstacles) {
-      o.x -= (speedWorld * dt) / WORLD_WIDTH;
+      o.x -= obstacleSpeed * dt;
       if (o.type === "elixir") {
         o.el.style.bottom = `${GROUND_Y + 10}%`;
       } else {
@@ -436,9 +445,10 @@
     }
     return {
       x: o.x + o.width * 0.1,
-      y: GROUND_Y,
+      // Above ground and shorter height = more forgiving collision
+      y: GROUND_Y + 3,
       width: o.width * 0.8,
-      height: o.height * 0.85,
+      height: o.height * 0.55,
     };
   }
 
