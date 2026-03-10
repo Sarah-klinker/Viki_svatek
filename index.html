@@ -7,7 +7,8 @@
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
     <title>Viktorie's Chaotic Name-Day Run</title>
-    <link rel="stylesheet" href="style.css" />
+    <!-- Cache-busting query so mobile always loads latest CSS -->
+    <link rel="stylesheet" href="style.css?v=3" />
   </head>
   <body>
     <div id="game-root">
@@ -86,7 +87,8 @@
     <audio id="audio-jump" src="assets/runner_hop.wav" preload="auto"></audio>
     <audio id="audio-boost" src="assets/boost.wav" preload="auto"></audio>
 
-    <script src="script.js" defer></script>
+    <!-- Cache-busting query so mobile always loads latest JS -->
+    <script src="script.js?v=3" defer></script>
   </body>
   </html>
 
