@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
+    <title>Viktorie's Chaotic Name-Day Run</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="game-root">
+      <div id="background-layer">
+        <div class="background bg-1"></div>
+        <div class="background bg-2"></div>
+      </div>
+
+      <div id="game-layer">
+        <div id="ground-line"></div>
+
+        <div id="player-shadow" class="shadow"></div>
+        <div id="chaser-shadow" class="shadow"></div>
+
+        <div id="player" class="character"></div>
+        <div id="chaser" class="character chaser"></div>
+
+        <div id="obstacle-layer"></div>
+        <div id="particle-layer"></div>
+        <div id="floating-text-layer"></div>
+
+        <div id="hud">
+          <div id="timer-display">Time: 0.0s</div>
+          <div id="chaos-display">Chaos level: Calm</div>
+          <div id="boost-display" class="hidden">Elixir active!</div>
+        </div>
+      </div>
+
+      <div id="screen-overlay">
+        <div id="start-screen" class="screen active">
+          <div class="screen-inner">
+            <h1>Viktorie's Chaotic Name‑Day Run</h1>
+            <p class="tagline">Special mission: escape from Hoffer’s son!</p>
+            <div class="start-characters">
+              <div class="start-viki"></div>
+              <div class="start-hoffer"></div>
+            </div>
+            <p class="hint">
+              Tap the screen, click, or press space to make Viktorie jump.
+            </p>
+            <button id="start-button" class="primary-button">
+              Start the chaos
+            </button>
+          </div>
+        </div>
+
+        <div id="game-over-screen" class="screen">
+          <div class="screen-inner">
+            <h2>Hoffer’s son caught you!</h2>
+            <p>That escalated quickly.</p>
+            <button id="retry-button" class="primary-button">Try again</button>
+          </div>
+        </div>
+
+        <div id="win-screen" class="screen">
+          <div class="screen-inner">
+            <h2>VIKTORIE SURVIVED!</h2>
+            <p>Hoffer’s son was defeated by pure confusion.</p>
+            <p class="happy-text">Happy name day, Viktorie! 🎉</p>
+            <button id="play-again-button" class="primary-button">
+              Run again
+            </button>
+          </div>
+        </div>
+
+        <div id="loading-screen" class="screen active">
+          <div class="screen-inner">
+            <h2>Loading absurdity…</h2>
+            <p>Please wait while Viktorie stretches her legs.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Audio elements (played after first user interaction) -->
+    <audio id="audio-jump" src="assets/runner_hop.wav" preload="auto"></audio>
+    <audio id="audio-boost" src="assets/boost.wav" preload="auto"></audio>
+
+    <script src="script.js" defer></script>
+  </body>
+  </html>
+
